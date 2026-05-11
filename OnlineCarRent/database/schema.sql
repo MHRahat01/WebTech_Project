@@ -1,4 +1,4 @@
-CREATE DATABASE online_car_rent;
+
 
 USE online_car_rent;
 
