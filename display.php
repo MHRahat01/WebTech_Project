@@ -1,6 +1,6 @@
 <?php
 // DB CONNECTION
-$conn = mysqli_connect("localhost", "root", "", "online_car_rental");
+$conn = mysqli_connect("localhost", "root", "", "online_car_rent");
 
 // CHECK CONNECTION
 if (!$conn) {
