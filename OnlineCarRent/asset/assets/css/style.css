@@ -1,0 +1,23 @@
+/* assets/css/style.css - basic responsive styles for Day 1 */
+*{box-sizing:border-box}
+body{font-family:Arial,Helvetica,sans-serif;background:#f5f7fa;color:#222;margin:0;padding:0}
+.container{max-width:1000px;margin:18px auto;padding:16px}
+.site-header{display:flex;justify-content:space-between;align-items:center;padding:8px 0}
+.site-header h1{margin:0;font-size:20px}
+.site-header nav a{margin-left:12px;color:#0b76d1;text-decoration:none}
+.card{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.06);padding:16px}
+.car-card{display:flex;flex-wrap:wrap;gap:16px}
+.car-image{flex:1 1 300px}
+.car-image img{width:100%;height:auto;border-radius:6px}
+.car-info{flex:1 1 320px}
+.car-info h2{margin-top:0}
+.form-row{margin:10px 0;display:flex;flex-direction:column}
+.form-row label{font-weight:600;margin-bottom:6px}
+.form-row input[type="date"]{padding:8px;border:1px solid #d7dce0;border-radius:6px}
+#totalCost{padding:10px;background:#f1f5f9;border-radius:6px;border:1px dashed #e2e8f0}
+.btn{display:inline-block;background:#0b76d1;color:#fff;border:none;padding:10px 16px;border-radius:6px;cursor:pointer}
+.btn:hover{background:#095eaa}
+.login-prompt{background:#fff3cd;padding:10px;border-radius:6px;border:1px solid #ffeeba}
+@media (max-width:720px){
+ .car-card{flex-direction:column}
+}
