@@ -22,10 +22,11 @@
     <textarea name="address"></textarea> <br><br>
 
     Phone:
-    <input type="text" name="phone"> <br><br>
+    <input type="number" name="phone"> <br><br>
 
     Role:
     <select name="role">
+        <option value="">Select Role</option>
         <option value="member">Member</option>
         <option value="admin">Admin</option>
     </select>
