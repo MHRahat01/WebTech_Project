@@ -1,9 +1,6 @@
 <?php
 // view/car_details.php
 // Expects $car (array) and $isMember (bool) to be defined by the controller.
-<?php
-// view/car_details.php
-// Expects $car (array) and $isMember (bool) to be defined by the controller.
 if (!isset($car)) {
     echo '<p>No car data provided.</p>';
     return;
@@ -38,16 +35,22 @@ $image = !empty($car['image_path']) ? $car['image_path'] : '/asset/img/placehold
             <p>Price per day: <strong>$<?php echo number_format((float)($car['price_per_day'] ?? 0), 2); ?></strong></p>
 
             <?php if ($isMember): ?>
-                <form id="order-form" action="?action=order_placement" method="post">
-                    <input type="hidden" name="car_id" value="<?php echo e($car['id']); ?>">
-                    <label>Start date
-                        <input type="date" name="start_date" id="start_date" required>
-                    </label>
-                    <label>End date
-                        <input type="date" name="end_date" id="end_date" required>
-                    </label>
+                <form id="order-form" action="?action=place_order" method="post" novalidate>
+                    <input type="hidden" name="car_id" id="car_id" value="<?php echo e($car['id']); ?>">
 
-                    <div class="total">Total: $<span id="total">0.00</span></div>
+                    <div class="field">
+                        <label for="start_date">Start date</label>
+                        <input type="date" name="start_date" id="start_date" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="end_date">End date</label>
+                        <input type="date" name="end_date" id="end_date" required>
+                    </div>
+
+                    <div class="total">Total: $<span id="total_cost">0.00</span></div>
+
+                    <div id="order_errors" style="color:crimson; margin:8px 0;"></div>
 
                     <button type="submit" class="btn">Proceed to Invoice</button>
                 </form>
@@ -57,8 +60,6 @@ $image = !empty($car['image_path']) ? $car['image_path'] : '/asset/img/placehold
         </div>
     </div>
 
-    <script>
-    // JS will be added in Day 2 for AJAX and dynamic total calculation
-    </script>
+    <script src="/asset/js/order.js"></script>
 </body>
 </html>

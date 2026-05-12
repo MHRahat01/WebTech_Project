@@ -1,53 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['user_id'])) {
-    $_SESSION['user_id'] = 1;
-    $_SESSION['role'] = 'member';
-}
-
-spl_autoload_register(function ($class) {
-    $paths = [__DIR__ . '/controller/' . $class . '.php', __DIR__ . '/model/' . $class . '.php'];
-    foreach ($paths as $file) {
-        if (file_exists($file)) {
-            require_once $file;
-            return;
-        }
-    }
-});
-
-$action = $_GET['action'] ?? 'home';
-
-switch ($action) {
-    case 'car_details':
-        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-        $controller = new CarController();
-        $controller->details($id);
-        break;
-
-    case 'order_placement':
-        echo '<h2>Order placement (placeholder) - Day 1</h2>';
-        break;
-
-    case 'invoice':
-        echo '<h2>Invoice (placeholder) - Day 1</h2>';
-        break;
-
-    case 'rental_history':
-        echo '<h2>Rental history (placeholder) - Day 1</h2>';
-        break;
-
-    case 'home':
-    default:
-        echo '<h1>Welcome to Online Car Rent - Day 1</h1>';
-        echo '<p>Use ?action=car_details&id=1 to view car details (if a car with id=1 exists).</p>';
-        break;
-}
-
-?>
-<?php
-session_start();
-
+// Quick demo login for convenience
 if (isset($_GET['login']) && $_GET['login'] === 'member') {
     $_SESSION['user_id'] = 1;
     $_SESSION['role'] = 'member';
@@ -62,10 +16,7 @@ if (isset($_GET['logout'])) {
 }
 
 spl_autoload_register(function ($class) {
-    $paths = [
-        __DIR__ . '/controller/' . $class . '.php',
-        __DIR__ . '/model/' . $class . '.php',
-    ];
+    $paths = [__DIR__ . '/controller/' . $class . '.php', __DIR__ . '/model/' . $class . '.php'];
     foreach ($paths as $file) {
         if (file_exists($file)) {
             require_once $file;
@@ -74,7 +25,7 @@ spl_autoload_register(function ($class) {
     }
 });
 
-    $action = isset($_GET['action']) ? $_GET['action'] : 'home';
+$action = isset($_GET['action']) ? $_GET['action'] : 'home';
 
 switch ($action) {
     case 'car_details':
@@ -83,22 +34,33 @@ switch ($action) {
         $controller->details($id);
         break;
 
+    case 'calculate_total':
+        $oc = new OrderController();
+        $oc->calculateTotal();
+        break;
+
+    case 'place_order':
+        $oc = new OrderController();
+        $oc->placeOrder();
+        break;
+
     case 'order_placement':
-        echo '<h2>Order Placement Coming</h2>';
+        echo '<h2>Order placement (placeholder)</h2>';
         break;
 
     case 'invoice':
-        echo '<h2>Invoice Coming </h2>';
+        echo '<h2>Invoice (placeholder)</h2>';
         break;
 
     case 'rental_history':
-         echo '<h2>Rental History Coming</h2>';
+        echo '<h2>Rental history (placeholder)</h2>';
         break;
 
+    case 'home':
     default:
-    require_once __DIR__ . '/model/db.php';
-    $db = getPDO();
-    $stmt = $db->query('SELECT id, name, model, price_per_day, image_path FROM cars');
+        require_once __DIR__ . '/model/db.php';
+        $db = getPDO();
+        $stmt = $db->query('SELECT id, name, model, price_per_day, image_path FROM cars');
         $cars = $stmt->fetchAll();
 
         echo '<!doctype html><html><head><meta charset="utf-8"><title>Car Listing</title>';

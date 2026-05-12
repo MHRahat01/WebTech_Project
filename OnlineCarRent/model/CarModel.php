@@ -25,6 +25,19 @@ class CarModel
         $row = $stmt->fetch();
         return $row ?: null;
     }
+
+    /**
+     * Check if a car is available for the given date range.
+     * Returns true if no overlapping orders exist with status pending or confirmed.
+     */
+    public function isAvailable(int $carId, string $startDate, string $endDate): bool
+    {
+        $sql = "SELECT COUNT(*) as cnt FROM orders WHERE car_id = :car_id AND status IN ('pending','confirmed') AND NOT (end_date <= :start_date OR start_date >= :end_date)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':car_id' => $carId, ':start_date' => $startDate, ':end_date' => $endDate]);
+        $row = $stmt->fetch();
+        return isset($row['cnt']) && (int)$row['cnt'] === 0;
+    }
 }
 
 ?>
