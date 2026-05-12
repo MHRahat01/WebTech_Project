@@ -49,28 +49,17 @@ function updateProfile($user) {
 
     global $conn;
 
-    $sql = "UPDATE users
-            SET name=?,
-                email=?,
-                address=?,
-                phone=?,
-                profile_picture=?
-            WHERE id=?";
+    $id = (int)$user['id'];
 
-    $stmt = mysqli_prepare($conn, $sql);
+    $sql = "UPDATE users SET 
+    name='{$user['name']}',
+    email='{$user['email']}',
+    address='{$user['address']}',
+    phone='{$user['phone']}',
+    profile_picture='{$user['profile_picture']}'
+    WHERE id=$id";
 
-    mysqli_stmt_bind_param(
-        $stmt,
-        "sssssi",
-        $user['name'],
-        $user['email'],
-        $user['address'],
-        $user['phone'],
-        $user['profile_picture'],
-        $user['id']
-    );
-
-    return mysqli_stmt_execute($stmt);
+    return mysqli_query($conn, $sql);
 }
 
 ?>

@@ -22,12 +22,9 @@ require_once('../model/db.php');
 
 <?php include('navbar.php'); ?>
 
-<h2>Welcome <?=$_SESSION['name']?></h2>
+<h2>Welcome <?=$_SESSION['name']?>  [<?=$_SESSION['role']?>]</h2>
 
-<input type="text"
-       id="search"
-       placeholder="Search car"
-       onkeyup="searchCar()">
+<input type="text" id="search" placeholder="Search car" onkeyup="searchCar()">
 
 <div id="result"></div>
 

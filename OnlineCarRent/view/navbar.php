@@ -1,21 +1,29 @@
-<a href="home.php">Home</a>
+<link rel="stylesheet" href="../asset/css/nav.css">
 
-<a href="profile.php">Profile</a>
+<div class="nav">
 
-<a href="browse.php">Browse Cars</a>
+    <div class="left-links">
+        <a href="home.php">Home</a>
+        <a href="profile.php">Profile</a>
+        <a href="browse.php">Browse Cars</a>
+        <a href="blog.php">Blog</a>
+        <a href="orderHistory.php">Order History</a>
+    </div>
 
-<?php
+    <div class="right-links">
 
-if($_SESSION['role'] == 'admin'){
-?>
+        <?php
+        if($_SESSION['role'] == 'admin'){
+        ?>
+            <a href="#">Admin Panel</a>
+        <?php
+        }
+        ?>
 
-<a href="#">Admin Panel</a>
+        <a href="../controller/logout.php">Logout</a>
 
-<?php
-}
-?>
+    </div>
 
-<a href="../controller/logout.php">Logout</a>
-
+</div>
 
 <hr>

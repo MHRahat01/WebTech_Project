@@ -46,6 +46,7 @@ if($user){
         }
 
         header('location: ../view/home.php');
+        
 
     }else{
 

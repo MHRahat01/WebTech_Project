@@ -10,15 +10,9 @@ require_once('../model/db.php');
 
 $id = $_GET['id'];
 
-$sql = "SELECT * FROM cars WHERE id=?";
+$sql = "SELECT * FROM cars WHERE id=$id";
 
-$stmt = mysqli_prepare($conn, $sql);
-
-mysqli_stmt_bind_param($stmt, "i", $id);
-
-mysqli_stmt_execute($stmt);
-
-$result = mysqli_stmt_get_result($stmt);
+$result = mysqli_query($conn, $sql);
 
 $car = mysqli_fetch_assoc($result);
 
