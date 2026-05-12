@@ -1,0 +1,154 @@
+body{
+
+    margin: 0;
+    padding: 0;
+    font-family: Arial;
+    background: linear-gradient(to right, #005bea, #003f88);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container{
+
+    width: 900px;
+    height: 500px;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    box-shadow: 0px 0px 20px rgba(0,0,0,0.3);
+}
+
+.left-panel{
+
+    width: 45%;
+    background: linear-gradient(to bottom, #0d6efd, #003f88);
+    color: white;
+    position: relative;
+    padding: 60px 40px;
+}
+
+.left-panel h1{
+
+    font-size: 45px;
+    margin-top: 80px;
+}
+
+.left-panel h3{
+
+    margin-top: -10px;
+}
+
+.left-panel p{
+
+    margin-top: 20px;
+    line-height: 25px;
+}
+
+.circle{
+
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+}
+
+.big{
+
+    width: 250px;
+    height: 250px;
+    bottom: -80px;
+    left: -80px;
+}
+
+.small{
+
+    width: 150px;
+    height: 150px;
+    bottom: 20px;
+    right: -40px;
+}
+
+.right-panel{
+
+    width: 55%;
+    padding: 70px;
+}
+
+.right-panel h2{
+
+    font-size: 40px;
+    margin-bottom: 30px;
+    color: #222;
+}
+
+.right-panel label{
+
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.right-panel input[type="email"],
+.right-panel input[type="password"]{
+
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.password-box{
+
+    display: flex;
+    gap: 10px;
+}
+
+.password-box button{
+
+    padding: 10px 15px;
+    border: none;
+    background: #0d6efd;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.remember{
+
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+.right-panel input[type="submit"]{
+
+    width: 100%;
+    padding: 13px;
+    border: none;
+    background: #003f88;
+    color: white;
+    font-size: 17px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.right-panel input[type="submit"]:hover{
+
+    background: #005bea;
+}
+
+.signup{
+
+    margin-top: 25px;
+    text-align: center;
+}
+
+.signup a{
+
+    text-decoration: none;
+    color: #005bea;
+    font-weight: bold;
+}

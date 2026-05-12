@@ -1,13 +1,12 @@
 <html>
 <head>
     <title>Registration</title>
+    <a
 </head>
 
 <body>
 
-<form method="post"
-      action="../controller/regCheck.php"
-      onsubmit="return validate()">
+<form method="post" action="../controller/regCheck.php" onsubmit="return validate()" autocomplete="off">
 
     Name:
     <input type="text" name="name" id="name"> <br><br>
@@ -16,7 +15,13 @@
     <input type="email" name="email" id="email"> <br><br>
 
     Password:
-    <input type="password" name="password" id="password"> <br><br>
+    <input type="password" name="password" id="password"> 
+
+    <label>
+    <input type="checkbox" onclick="togglePassword()"> Show Password
+    </label><br><br>
+
+    
 
     Address:
     <textarea name="address"></textarea> <br><br>
@@ -36,28 +41,8 @@
     <input type="submit" name="submit" value="Register">
 
 </form>
-
-<script>
-
-function validate(){
-
-    let name = document.getElementById('name').value;
-    let password = document.getElementById('password').value;
-
-    if(name == ""){
-        alert("Name required");
-        return false;
-    }
-
-    if(password.length < 8){
-        alert("Password must be 8 characters");
-        return false;
-    }
-
-    return true;
-}
-
-</script>
+<script src="../asset/js/showpass.js"></script>
+<script src="../asset/js/regValidate.js"></script>
 
 </body>
 </html>

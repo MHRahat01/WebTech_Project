@@ -6,10 +6,9 @@ function insertUser($user) {
 
     global $conn;
 
-    
-    $hashedPassword = password_hash($user['password'], PASSWORD_DEFAULT);
-
-    $sql = "INSERT INTO users (name, email, password_hash, role, address, phone) VALUES (?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO users
+    (name, email, password_hash, role, address, phone)
+    VALUES (?, ?, ?, ?, ?, ?)";
 
     $stmt = mysqli_prepare($conn, $sql);
 
@@ -18,7 +17,7 @@ function insertUser($user) {
         "ssssss",
         $user['name'],
         $user['email'],
-        $hashedPassword,
+        $user['password'],
         $user['role'],
         $user['address'],
         $user['phone']
@@ -32,9 +31,10 @@ function getUserByEmail($email) {
 
     global $conn;
 
-    $sql = "SELECT * FROM users WHERE email = ?";
+    $sql = "SELECT * FROM users WHERE email=?";
 
     $stmt = mysqli_prepare($conn, $sql);
+
     mysqli_stmt_bind_param($stmt, "s", $email);
 
     mysqli_stmt_execute($stmt);
@@ -49,7 +49,13 @@ function updateProfile($user) {
 
     global $conn;
 
-    $sql = "UPDATE users SET name = ?, email = ?, address = ?, phone = ?, profile_picture = ? WHERE id = ?";
+    $sql = "UPDATE users
+            SET name=?,
+                email=?,
+                address=?,
+                phone=?,
+                profile_picture=?
+            WHERE id=?";
 
     $stmt = mysqli_prepare($conn, $sql);
 
