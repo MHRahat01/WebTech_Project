@@ -21,3 +21,8 @@ Welcome :
 Logout
 
 </a>
+<a href="CarList.php">
+
+    Manage Cars
+
+</a>
