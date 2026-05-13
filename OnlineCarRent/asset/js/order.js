@@ -97,3 +97,49 @@
         }
     });
 })();
+
+// Invoice page behaviors: cancel and finalize
+(function () {
+    const cancelBtn = document.getElementById('cancelBtn');
+    const finalizeBtn = document.getElementById('finalizeBtn');
+    const paymentSection = document.getElementById('paymentSection');
+    const invoiceErrors = document.getElementById('invoice_errors');
+
+    function setInvoiceError(msg) {
+        if (invoiceErrors) invoiceErrors.textContent = msg || '';
+    }
+
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', async function (e) {
+            e.preventDefault();
+            setInvoiceError('');
+            if (!confirm('Are you sure you want to cancel this order?')) return;
+
+            const orderId = window.__ORDER_ID || document.querySelector('[name="order_id"]')?.value;
+            try {
+                const res = await fetch('?action=cancel_order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ order_id: orderId })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    // redirect to rental_history or home for now
+                    window.location.href = '?action=rental_history';
+                } else {
+                    setInvoiceError(data.error || 'Failed to cancel order.');
+                }
+            } catch (err) {
+                setInvoiceError('Network error cancelling order.');
+            }
+        });
+    }
+
+    if (finalizeBtn) {
+        finalizeBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            setInvoiceError('');
+            if (paymentSection) paymentSection.style.display = 'block';
+        });
+    }
+})();

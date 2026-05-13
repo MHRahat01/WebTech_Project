@@ -44,6 +44,25 @@ switch ($action) {
         $oc->placeOrder();
         break;
 
+    case 'cancel_order':
+        $oc = new OrderController();
+        $oc->cancelOrder();
+        break;
+
+    case 'invoice':
+        $orderId = isset($_GET['order_id']) ? (int)$_GET['order_id'] : 0;
+        $oc = new OrderController();
+        if ($orderId > 0) {
+            $oc->invoice($orderId);
+        } else {
+            echo '<p>Invalid order id.</p>';
+        }
+        break;
+
+    case 'finalize_order':
+        echo '<h2>Finalize order (placeholder)</h2>';
+        break;
+
     case 'order_placement':
         echo '<h2>Order placement (placeholder)</h2>';
         break;
@@ -64,7 +83,7 @@ switch ($action) {
         $cars = $stmt->fetchAll();
 
         echo '<!doctype html><html><head><meta charset="utf-8"><title>Car Listing</title>';
-        echo '<link rel="stylesheet" href="/asset/css/style.css">';
+    echo '<link rel="stylesheet" href="asset/css/style.css">';
         echo '</head><body><div class="container">';
         echo '<header><h1>Car Rental</h1>';
         if (isset($_SESSION['user_id']) && $_SESSION['role'] === 'member') {
@@ -79,7 +98,31 @@ switch ($action) {
             $name = htmlspecialchars($car['name']);
             $model = htmlspecialchars($car['model']);
             $price = htmlspecialchars($car['price_per_day']);
-            $img = $car['image_path'] ? htmlspecialchars($car['image_path']) : '/asset/img/placeholder.png';
+            $rawPath = trim((string)($car['image_path'] ?? ''));
+            if ($rawPath === '') {
+                $img = 'asset/img/placeholder.svg';
+            } elseif ($rawPath === 'car1.avif' || stripos($rawPath, 'car1') !== false) {
+                // map common demo filename to existing AVIF in repo
+                $img = 'asset/img/photo-1614200179396-2bdb77ebf81b.avif';
+            } elseif (preg_match('#^(https?://|/)#', $rawPath)) {
+                $img = htmlspecialchars($rawPath);
+            } elseif (strpos($rawPath, '/') !== false) {
+                $img = htmlspecialchars($rawPath);
+            } else {
+                // try asset/img first
+                $candidate = __DIR__ . '/asset/img/' . $rawPath;
+                if (file_exists($candidate)) {
+                    $img = 'asset/img/' . rawurlencode($rawPath);
+                } else {
+                    // only use uploads/cars if file exists; otherwise fallback to AVIF placeholder
+                    $upCandidate = __DIR__ . '/uploads/cars/' . $rawPath;
+                    if (file_exists($upCandidate)) {
+                        $img = 'uploads/cars/' . rawurlencode($rawPath);
+                    } else {
+                        $img = 'asset/img/photo-1614200179396-2bdb77ebf81b.avif';
+                    }
+                }
+            }
             echo '<div class="card">';
             echo '<img src="' . $img . '" alt="' . $name . '">';
             echo '<div class="card-body">';

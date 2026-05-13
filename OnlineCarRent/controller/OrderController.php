@@ -141,6 +141,69 @@ class OrderController
 
         $this->jsonResponse(['success' => true, 'order_id' => $orderId]);
     }
+
+    /**
+     * Render invoice page for given order id.
+     */
+    public function invoice(int $orderId)
+    {
+        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'member') {
+            header('Location: /');
+            exit;
+        }
+
+        $order = $this->orderModel->getById($orderId);
+        if (!$order) {
+            echo '<p>Order not found.</p>';
+            return;
+        }
+
+        if ((int)$order['user_id'] !== (int)$_SESSION['user_id'] || $order['status'] !== 'pending') {
+            echo '<p>Unauthorized or order not pending.</p>';
+            return;
+        }
+
+        $car = $this->carModel->getById((int)$order['car_id']);
+        require __DIR__ . '/../view/order_invoice.php';
+    }
+
+    /**
+     * JSON endpoint to cancel an order.
+     */
+    public function cancelOrder()
+    {
+        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'member') {
+            $this->jsonResponse(['success' => false, 'error' => 'Unauthorized']);
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        $orderId = isset($payload['order_id']) ? (int)$payload['order_id'] : 0;
+        if ($orderId <= 0) {
+            $this->jsonResponse(['success' => false, 'error' => 'Invalid order id']);
+        }
+
+        $order = $this->orderModel->getById($orderId);
+        if (!$order) {
+            $this->jsonResponse(['success' => false, 'error' => 'Order not found']);
+        }
+
+        if ((int)$order['user_id'] !== (int)$_SESSION['user_id']) {
+            $this->jsonResponse(['success' => false, 'error' => 'Unauthorized']);
+        }
+
+        if ($order['status'] !== 'pending') {
+            $this->jsonResponse(['success' => false, 'error' => 'Only pending orders can be cancelled']);
+        }
+
+        $ok = $this->orderModel->updateStatus($orderId, 'cancelled');
+        if (!$ok) {
+            $this->jsonResponse(['success' => false, 'error' => 'Failed to cancel order']);
+        }
+
+        $this->jsonResponse(['success' => true]);
+    }
 }
 
 ?>

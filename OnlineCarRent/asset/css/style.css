@@ -1,2 +1,59 @@
-/* shim to load actual stylesheet located in asset/assets/css/style.css */
-@import url('/asset/assets/css/style.css');
+
+.car-card {
+ display: flex;
+ flex-direction: row;
+ gap: 16px;
+ max-width: 900px;
+ margin: 0 auto;
+ border: 1px solid #ddd;
+ border-radius: 8px;
+ padding: 16px;
+ box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+
+.car-image img { max-width: 320px; width: 100%; height: auto; border-radius: 6px; }
+.no-image { width:320px; height:180px; display:flex; align-items:center; justify-content:center; background:#f4f4f4; color:#888; border-radius:6px }
+
+
+.car-info { flex: 1; }
+.car-info h2 { margin-top: 0; }
+
+
+form#order-form { display: flex; flex-direction: column; gap: 8px; max-width: 360px; }
+form#order-form label { display: flex; flex-direction: column; font-size: 14px; }
+form#order-form input[type="date"] { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+
+
+.total { margin-top: 8px; font-weight: bold; }
+.btn { background: #007bff; color: white; border: none; padding: 10px 14px; border-radius: 4px; cursor: pointer; }
+.btn:hover { background: #0069d9; }
+
+
+@media (max-width: 700px) {
+ .car-card { flex-direction: column; padding: 12px; }
+ .car-image img, .no-image { max-width: 100%; }
+}
+:root{--max-width:1100px;--accent:#2d79f7;--muted:#666}
+*{box-sizing:border-box}
+body{font-family:Inter,Arial,Helvetica,sans-serif;line-height:1.4;margin:0;background:#f5f7fb;color:#111}
+.container{max-width:var(--max-width);margin:1rem auto;padding:1rem}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
+.card{background:white;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(15,20,30,0.06);display:flex;flex-direction:column}
+.card img{width:100%;height:160px;object-fit:cover}
+.card-body{padding:0.75rem}
+.card h3{margin:0 0 0.25rem 0;font-size:1.05rem}
+.card p{margin:0.25rem 0;color:var(--muted)}
+.price{font-weight:600;color:var(--accent)}
+.btn{display:inline-block;padding:0.5rem 0.75rem;background:var(--accent);color:white;border-radius:6px;text-decoration:none;border:none;cursor:pointer}
+.form-row{margin:0.5rem 0;display:flex;flex-direction:column}
+label{font-size:0.9rem;margin-bottom:0.25rem}
+input[type="date"],select,input[type="text"],input[type="number"]{padding:0.5rem;border:1px solid #ddd;border-radius:6px}
+.muted{color:var(--muted);font-size:0.9rem}
+.notice{padding:0.75rem;background:#fff6f6;border:1px solid #ffd6d6;color:#7a2b2b;border-radius:6px}
+.user-info{font-size:0.9rem}
+@media (max-width:600px){.card img{height:140px}}
+
+
+
