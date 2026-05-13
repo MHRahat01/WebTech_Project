@@ -8,13 +8,25 @@ if($key == "" || $key == null){
     exit;
 }
 
-$sql = "SELECT * FROM cars WHERE name LIKE '%$key%'";
+$sql = "SELECT * FROM cars WHERE name LIKE ?";
 
-$result = mysqli_query($conn, $sql);
+$stmt = mysqli_prepare($conn, $sql);
+
+$search = "%".$key."%";
+
+mysqli_stmt_bind_param($stmt, "s", $search);
+
+mysqli_stmt_execute($stmt);
+
+$result = mysqli_stmt_get_result($stmt);
+
+$data = [];
 
 while($row = mysqli_fetch_assoc($result)){
 
-    echo "<a href='../view/carDetails.php?id=".$row['id']."'>".$row['name']."</a><br>";
+    $data[] = $row;
 }
+
+echo json_encode($data);
 
 ?>

@@ -18,6 +18,7 @@ require_once('../model/db.php');
         <title>Home</title>
         <link rel="stylesheet" href="../asset/css/home.css">
     </head>
+    <script src="../asset/js/search.js"></script>
 <body>
 
 <?php include('navbar.php'); ?>
@@ -89,33 +90,7 @@ while($car = mysqli_fetch_assoc($result2)){
 }
 ?>
 
-<script>
 
-function searchCar(){
-
-    let key = document.getElementById('search').value;
-
-    let xhttp = new XMLHttpRequest();
-
-    xhttp.open(
-        'GET',
-        '../controller/search.php?key='+key,
-        true
-    );
-
-    xhttp.send();
-
-    xhttp.onreadystatechange = function(){
-
-        if(this.readyState == 4 && this.status == 200){
-
-            document.getElementById('result').innerHTML =
-            this.responseText;
-        }
-    }
-}
-
-</script>
 
 </body>
 </html>
