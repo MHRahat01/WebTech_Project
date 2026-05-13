@@ -38,7 +38,7 @@ function getAllMembers($conn){
 
         WHERE role='member'
 
-        ORDER BY id DESC"
+        ORDER BY id ASC"
 
     );
 
