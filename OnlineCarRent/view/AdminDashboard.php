@@ -15,14 +15,25 @@ Welcome :
 <?= $_SESSION['name'] ?>
 
 </h1>
+<br><br>
 
 <a href="../logout.php">
 
 Logout
 
 </a>
+<br><br>
+
 <a href="CarList.php">
 
     Manage Cars
+
+</a>
+<br><br>
+
+
+<a href="MemberList.php">
+
+    Members
 
 </a>
