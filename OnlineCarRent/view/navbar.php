@@ -15,7 +15,7 @@
         <?php
         if($_SESSION['role'] == 'admin'){
         ?>
-            <a href="#">Admin Panel</a>
+            <a href="#">Admin Dashboard</a>
         <?php
         }
         ?>

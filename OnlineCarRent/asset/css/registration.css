@@ -1,0 +1,304 @@
+/* asset/css/registration.css */
+
+body{
+
+    margin: 0;
+    padding: 20px;
+
+    font-family: Arial;
+
+    background: linear-gradient(to right, #005bea, #003f88);
+
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    box-sizing: border-box;
+}
+
+.container{
+
+    width: 1250px;
+
+    min-height: 650px;
+
+    display: flex;
+
+    background: #1f2f4d;
+
+    border-radius: 15px;
+
+    overflow: hidden;
+
+    box-shadow: 0px 0px 25px rgba(0,0,0,0.35);
+}
+
+.left-panel{
+
+    width: 45%;
+
+    background: linear-gradient(to bottom right, #00c6ff, #0072ff);
+
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    overflow: hidden;
+}
+
+.left-panel::before{
+
+    content: "";
+
+    position: absolute;
+
+    width: 450px;
+    height: 450px;
+
+    background: rgba(255,255,255,0.08);
+
+    border-radius: 40%;
+
+    top: -140px;
+    left: -120px;
+
+    transform: rotate(25deg);
+}
+
+.left-panel::after{
+
+    content: "";
+
+    position: absolute;
+
+    width: 350px;
+    height: 350px;
+
+    background: rgba(255,255,255,0.08);
+
+    border-radius: 40%;
+
+    bottom: -120px;
+    right: -80px;
+
+    transform: rotate(-20deg);
+}
+
+.logo-box{
+
+    width: 220px;
+    height: 220px;
+
+    border: 6px solid #1b2a49;
+
+    background: rgba(0,0,0,0.15);
+
+    clip-path: polygon(
+        25% 6%,
+        75% 6%,
+        100% 50%,
+        75% 94%,
+        25% 94%,
+        0% 50%
+    );
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+
+    z-index: 2;
+}
+
+.logo-box h1{
+
+    color: white;
+
+    text-align: center;
+
+    line-height: 45px;
+
+    font-size: 38px;
+}
+
+.logo-box span{
+
+    color: #1b2a49;
+}
+
+.right-panel{
+
+    width: 55%;
+
+    padding: 40px 55px;
+
+    box-sizing: border-box;
+}
+
+.right-panel h2{
+
+    color: white;
+
+    font-size: 36px;
+
+    margin-bottom: 5px;
+}
+
+.subtitle{
+
+    color: #00c6ff;
+
+    margin-bottom: 20px;
+
+    font-size: 14px;
+}
+
+.back-btn{
+
+    display: inline-block;
+
+    margin-bottom: 20px;
+
+    text-decoration: none;
+
+    color: white;
+
+    background: rgba(255,255,255,0.1);
+
+    padding: 10px 18px;
+
+    border-radius: 6px;
+
+    transition: 0.3s;
+}
+
+.back-btn:hover{
+
+    background: #00c6ff;
+}
+
+.right-panel form input,
+.right-panel form textarea,
+.right-panel form select{
+
+    width: 100%;
+
+    padding: 14px;
+
+    margin-bottom: 16px;
+
+    background: transparent;
+
+    border: 1px solid rgba(255,255,255,0.25);
+
+    color: white;
+
+    font-size: 14px;
+
+    outline: none;
+
+    box-sizing: border-box;
+}
+
+.right-panel form textarea{
+
+    resize: none;
+
+    height: 75px;
+}
+
+.right-panel form input::placeholder,
+.right-panel form textarea::placeholder{
+
+    color: rgba(255,255,255,0.6);
+}
+
+.password-box{
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-bottom: 16px;
+}
+
+.password-box input{
+
+    flex: 1;
+
+    margin-bottom: 0 !important;
+}
+
+.password-box button{
+
+    width: 90px;
+
+    border: none;
+
+    background: #00c6ff;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-weight: bold;
+
+    border-radius: 5px;
+}
+
+.right-panel select{
+
+    color: rgba(255,255,255,0.8);
+}
+
+.right-panel option{
+
+    color: black;
+}
+
+.right-panel input[type="submit"]{
+
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+
+    border: none;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    border-radius: 5px;
+
+    transition: 0.3s;
+}
+
+.right-panel input[type="submit"]:hover{
+
+    opacity: 0.85;
+}
+
+.signin{
+
+    text-align: center;
+
+    margin-top: 18px;
+
+    color: white;
+}
+
+.signin a{
+
+    color: #00c6ff;
+
+    text-decoration: none;
+
+    font-weight: bold;
+}

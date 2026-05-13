@@ -1,47 +1,104 @@
 <html>
+
 <head>
+
     <title>Registration</title>
-    <a
+
+    <link rel="stylesheet"  href="../asset/css/registration.css">
+
 </head>
 
 <body>
 
-<form method="post" action="../controller/regCheck.php" onsubmit="return validate()" autocomplete="off">
+<div class="container">
 
-    Name:
-    <input type="text" name="name" id="name"> <br><br>
+    <div class="left-panel">
 
-    Email:
-    <input type="email" name="email" id="email"> <br><br>
+    <div class="logo-box">
 
-    Password:
-    <input type="password" name="password" id="password"> 
+        <h1>
+            CAR<br>
+            <span>RENT</span>
+        </h1>
 
-    <label>
-    <input type="checkbox" onclick="togglePassword()"> Show Password
-    </label><br><br>
+    </div>
 
-    
+</div>
 
-    Address:
-    <textarea name="address"></textarea> <br><br>
+    <div class="right-panel">
+        <a href="login.php" class="back-btn">← Back</a>
 
-    Phone:
-    <input type="number" name="phone"> <br><br>
+        <h2>Register</h2>
 
-    Role:
-    <select name="role">
-        <option value="">Select Role</option>
-        <option value="member">Member</option>
-        <option value="admin">Admin</option>
-    </select>
+        <p class="subtitle">
+            Create your account. It's free and only takes a minute.
+        </p>
 
-    <br><br>
+        <form method="post"
+              action="../controller/regCheck.php"
+              onsubmit="return validate()"
+              autocomplete="off">
 
-    <input type="submit" name="submit" value="Register">
+            <input type="text"
+                   name="name"
+                   id="name"
+                   placeholder="Full Name">
 
-</form>
+            <input type="email"
+                   name="email"
+                   id="email"
+                   placeholder="Email">
+
+            <div class="password-box">
+
+                <input type="password"
+                       name="password"
+                       id="password"
+                       placeholder="Password">
+
+                <button type="button"
+                        onclick="showPassword()">
+                    Show
+                </button>
+
+            </div>
+
+            <textarea name="address"
+                      placeholder="Address"></textarea>
+
+            <input type="number"
+                   name="phone"
+                   placeholder="Phone">
+
+            <select name="role">
+
+                <option value="">
+                    Select Role
+                </option>
+
+                <option value="member">
+                    Member
+                </option>
+
+                <option value="admin">
+                    Admin
+                </option>
+
+            </select>
+
+            <input type="submit"
+                   name="submit"
+                   value="SIGN UP">
+
+        </form>
+
+        
+    </div>
+
+</div>
+
 <script src="../asset/js/showpass.js"></script>
+
 <script src="../asset/js/regValidate.js"></script>
 
 </body>
