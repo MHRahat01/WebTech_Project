@@ -24,7 +24,7 @@ function getAllOrders($conn){
         JOIN cars
         ON orders.car_id = cars.id
 
-        ORDER BY orders.id DESC"
+        ORDER BY orders.id ASC"
 
     );
 
