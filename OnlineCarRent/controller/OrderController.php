@@ -2,6 +2,7 @@
 // controller/OrderController.php
 require_once __DIR__ . '/../model/CarModel.php';
 require_once __DIR__ . '/../model/OrderModel.php';
+require_once __DIR__ . '/../model/PaymentModel.php';
 
 class OrderController
 {
@@ -203,6 +204,73 @@ class OrderController
         }
 
         $this->jsonResponse(['success' => true]);
+    }
+
+    /**
+     * JSON endpoint to finalize an order (confirm payment).
+     */
+    public function finalizeOrder()
+    {
+        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'member') {
+            $this->jsonResponse(['success' => false, 'error' => 'Unauthorized']);
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        $orderId = isset($payload['order_id']) ? (int)$payload['order_id'] : 0;
+        $paymentMethod = $payload['payment_method'] ?? '';
+
+        $allowed = ['card','bKash','Nagad','bank','cod'];
+        if ($orderId <= 0 || empty($paymentMethod)) {
+            $this->jsonResponse(['success' => false, 'error' => 'Invalid input']);
+        }
+        if (!in_array($paymentMethod, $allowed, true)) {
+            $this->jsonResponse(['success' => false, 'error' => 'Unsupported payment method']);
+        }
+
+        $order = $this->orderModel->getById($orderId);
+        if (!$order) {
+            $this->jsonResponse(['success' => false, 'error' => 'Order not found']);
+        }
+        if ((int)$order['user_id'] !== (int)$_SESSION['user_id']) {
+            $this->jsonResponse(['success' => false, 'error' => 'Unauthorized']);
+        }
+        if ($order['status'] !== 'pending') {
+            $this->jsonResponse(['success' => false, 'error' => 'Order is not pending']);
+        }
+
+        // Optional: could re-check availability here
+
+        $db = getPDO();
+        try {
+            $db->beginTransaction();
+
+            $ok = $this->orderModel->updateStatus($orderId, 'confirmed');
+            if (!$ok) {
+                $db->rollBack();
+                $this->jsonResponse(['success' => false, 'error' => 'Failed to update order status']);
+            }
+
+            $paymentModel = new PaymentModel();
+            $transactionId = bin2hex(random_bytes(8));
+            $paymentData = [
+                'order_id' => $orderId,
+                'amount' => $order['total_cost'],
+                'payment_method' => $paymentMethod,
+                'transaction_id' => $transactionId,
+            ];
+            $paymentId = $paymentModel->create($paymentData);
+            if ($paymentId === false) {
+                $db->rollBack();
+                $this->jsonResponse(['success' => false, 'error' => 'Failed to create payment record']);
+            }
+
+            $db->commit();
+            $this->jsonResponse(['success' => true]);
+        } catch (Exception $ex) {
+            if ($db->inTransaction()) $db->rollBack();
+            $this->jsonResponse(['success' => false, 'error' => 'Server error: '.$ex->getMessage()]);
+        }
     }
 }
 

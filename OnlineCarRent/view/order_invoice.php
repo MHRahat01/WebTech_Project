@@ -34,11 +34,19 @@ function e($v) { return htmlspecialchars($v, ENT_QUOTES, 'UTF-8'); }
         </div>
 
         <div id="paymentSection" class="payment-placeholder">
-            <p>Payment methods (placeholder)</p>
+            <p>Select payment method</p>
             <select id="paymentMethod">
+                <option value="">-- Select method --</option>
                 <option value="card">Credit Card</option>
+                <option value="bKash">bKash</option>
+                <option value="Nagad">Nagad</option>
                 <option value="bank">Bank Transfer</option>
+                <option value="cod">Cash on Delivery</option>
             </select>
+            <div style="margin-top:8px">
+                <button id="confirmPaymentBtn" class="btn">Confirm Payment</button>
+            </div>
+            <div id="payment_errors" style="color:crimson;margin-top:8px"></div>
         </div>
     </div>
 

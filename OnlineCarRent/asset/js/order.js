@@ -142,4 +142,36 @@
             if (paymentSection) paymentSection.style.display = 'block';
         });
     }
+
+    // Confirm payment handler
+    const confirmBtn = document.getElementById('confirmPaymentBtn');
+    const paymentErrors = document.getElementById('payment_errors');
+    function setPaymentError(msg) { if (paymentErrors) paymentErrors.textContent = msg || ''; }
+
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', async function (e) {
+            e.preventDefault();
+            setInvoiceError(''); setPaymentError('');
+            const methodEl = document.getElementById('paymentMethod');
+            const method = methodEl ? methodEl.value : '';
+            if (!method) { setPaymentError('Please select a payment method.'); return; }
+
+            const orderId = window.__ORDER_ID || document.querySelector('[name="order_id"]')?.value;
+            try {
+                const res = await fetch('?action=finalize_order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ order_id: orderId, payment_method: method })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    window.location.href = '?action=rental_history&payment_success=1';
+                } else {
+                    setPaymentError(data.error || 'Failed to finalize payment.');
+                }
+            } catch (err) {
+                setPaymentError('Network error finalizing payment.');
+            }
+        });
+    }
 })();

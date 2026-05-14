@@ -49,6 +49,11 @@ switch ($action) {
         $oc->cancelOrder();
         break;
 
+    case 'finalize_order':
+        $oc = new OrderController();
+        $oc->finalizeOrder();
+        break;
+
     case 'invoice':
         $orderId = isset($_GET['order_id']) ? (int)$_GET['order_id'] : 0;
         $oc = new OrderController();
