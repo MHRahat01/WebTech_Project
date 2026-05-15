@@ -14,6 +14,7 @@ $user = getUserByEmail($_SESSION['email']);
 
 <html>
 <head>
+    <script src="../asset/js/profilevalid.js"></script>
 </head>
 
 <body>
@@ -36,10 +37,7 @@ if(isset($_GET['pass'])){
 
 ?>
 
-<form method="post"
-      action="../controller/profileCheck.php"
-      enctype="multipart/form-data"
-      onsubmit="return validateProfile()">
+<form method="post"action="../controller/profileCheck.php"enctype="multipart/form-data" onsubmit="return validateProfile()">
 
     Name:
     <input type="text"
@@ -81,8 +79,7 @@ if(isset($_GET['pass'])){
 
 <h3>Change Password</h3>
 
-<form method="post"
-      action="../controller/changePassword.php">
+<form method="post" action="../controller/changePassword.php">
 
     Current Password:
     <input type="password" name="current_password">
@@ -98,21 +95,6 @@ if(isset($_GET['pass'])){
 
 </form>
 
-<script>
-
-function validateProfile(){
-
-    let name = document.getElementById('name').value;
-
-    if(name == ""){
-        alert("Name required");
-        return false;
-    }
-
-    return true;
-}
-
-</script>
 
 </body>
 </html>
