@@ -15,6 +15,12 @@ if (isset($_GET['logout'])) {
     exit;
 }
 
+// Keep demo member logged-in by default (unless explicitly logged out)
+if (!isset($_SESSION['user_id'])) {
+    $_SESSION['user_id'] = 1;
+    $_SESSION['role'] = 'member';
+}
+
 spl_autoload_register(function ($class) {
     $paths = [__DIR__ . '/controller/' . $class . '.php', __DIR__ . '/model/' . $class . '.php'];
     foreach ($paths as $file) {
@@ -77,7 +83,8 @@ switch ($action) {
         break;
 
     case 'rental_history':
-        echo '<h2>Rental history (placeholder)</h2>';
+        $oc = new OrderController();
+        $oc->rentalHistory();
         break;
 
     case 'home':
@@ -89,7 +96,14 @@ switch ($action) {
 
         echo '<!doctype html><html><head><meta charset="utf-8"><title>Car Listing</title>';
     echo '<link rel="stylesheet" href="asset/css/style.css">';
-        echo '</head><body><div class="container">';
+        echo '</head><body>';
+        // show member menu if available
+        if (isset($_SESSION['user_id']) && $_SESSION['role'] === 'member') {
+            if (file_exists(__DIR__ . '/view/member_menu.php')) {
+                require __DIR__ . '/view/member_menu.php';
+            }
+        }
+        echo '<div class="container">';
         echo '<header><h1>Car Rental</h1>';
         if (isset($_SESSION['user_id']) && $_SESSION['role'] === 'member') {
             echo '<div class="user-info">Logged in as member | <a href="?logout=1">Logout</a></div>';

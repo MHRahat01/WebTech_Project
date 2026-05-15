@@ -49,6 +49,22 @@ class OrderModel
     }
 
     /**
+     * Fetch all orders for a given user id, joined with cars table for display.
+     * Returns an array of orders with car information.
+     */
+    public function getByUserId(int $userId)
+    {
+        $sql = 'SELECT o.id, o.user_id, o.car_id, o.start_date, o.end_date, o.total_cost, o.status, o.order_date, c.name as car_name, c.model as car_model'
+             . ' FROM orders o'
+             . ' LEFT JOIN cars c ON c.id = o.car_id'
+             . ' WHERE o.user_id = :uid'
+             . ' ORDER BY o.order_date DESC';
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':uid' => $userId]);
+        return $stmt->fetchAll();
+    }
+
+    /**
      * Update order status.
      */
     public function updateStatus(int $orderId, string $status)

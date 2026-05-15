@@ -272,6 +272,23 @@ class OrderController
             $this->jsonResponse(['success' => false, 'error' => 'Server error: '.$ex->getMessage()]);
         }
     }
+
+    /**
+     * Render rental history for logged-in member
+     */
+    public function rentalHistory()
+    {
+        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'member') {
+            header('Location: /');
+            exit;
+        }
+
+        $userId = (int)$_SESSION['user_id'];
+        $orders = $this->orderModel->getByUserId($userId);
+
+        require __DIR__ . '/../view/rental_history.php';
+    }
 }
 
 ?>
