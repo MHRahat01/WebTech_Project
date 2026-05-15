@@ -1,6 +1,24 @@
 // asset/js/order.js
 // Handles AJAX total calculation and order placement
 
+// Helper to read CSRF token from meta tag
+function getCsrfToken() {
+    const meta = document.querySelector('meta[name="csrf-token"]');
+    return meta ? meta.getAttribute('content') : '';
+}
+
+// Helper to POST JSON with CSRF header and same-origin credentials
+async function postJson(url, payload) {
+    const csrf = getCsrfToken();
+    const res = await fetch(url, {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
+        body: JSON.stringify(Object.assign({}, payload, { csrf_token: csrf }))
+    });
+    return res;
+}
+
 (function () {
     function qs(sel) { return document.querySelector(sel); }
     function qsa(sel) { return document.querySelectorAll(sel); }
@@ -44,12 +62,7 @@
         }
 
         try {
-            const csrf = document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').getAttribute('content') : '';
-            const res = await fetch('?action=calculate_total', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
-                body: JSON.stringify({ car_id, start_date, end_date })
-            });
+            const res = await postJson('?action=calculate_total', { car_id, start_date, end_date });
             const data = await res.json();
             if (data.success) {
                 totalSpan.textContent = parseFloat(data.total).toFixed(2);
@@ -81,12 +94,7 @@
         }
 
         try {
-            const csrf = document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').getAttribute('content') : '';
-            const res = await fetch('?action=place_order', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
-                body: JSON.stringify({ car_id, start_date, end_date })
-            });
+            const res = await postJson('?action=place_order', { car_id, start_date, end_date });
             const data = await res.json();
             if (data.success) {
                 // Redirect to invoice page with order id
@@ -119,12 +127,7 @@
 
             const orderId = window.__ORDER_ID || document.querySelector('[name="order_id"]')?.value;
             try {
-                const csrf = document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').getAttribute('content') : '';
-                const res = await fetch('?action=cancel_order', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
-                    body: JSON.stringify({ order_id: orderId })
-                });
+                const res = await postJson('?action=cancel_order', { order_id: orderId });
                 const data = await res.json();
                 if (data.success) {
                     // redirect to rental_history or home for now
@@ -160,13 +163,8 @@
             if (!method) { setPaymentError('Please select a payment method.'); return; }
 
             const orderId = window.__ORDER_ID || document.querySelector('[name="order_id"]')?.value;
-            try {
-                const csrf = document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').getAttribute('content') : '';
-                const res = await fetch('?action=finalize_order', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
-                    body: JSON.stringify({ order_id: orderId, payment_method: method })
-                });
+                try {
+                const res = await postJson('?action=finalize_order', { order_id: orderId, payment_method: method });
                 const data = await res.json();
                 if (data.success) {
                     window.location.href = '?action=rental_history&payment_success=1';

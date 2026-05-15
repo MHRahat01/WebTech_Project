@@ -60,6 +60,7 @@ if ($rawPath === '') {
             <?php if ($isMember): ?>
                 <form id="order-form" action="?action=place_order" method="post" novalidate>
                     <input type="hidden" name="car_id" id="car_id" value="<?php echo e($car['id']); ?>">
+                    <input type="hidden" name="csrf_token" value="<?php echo isset($_SESSION['csrf_token']) ? htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') : ''; ?>">
                     <div class="field">
                         <label for="start_date">Start date</label>
                         <input type="date" name="start_date" id="start_date" required>
@@ -82,6 +83,6 @@ if ($rawPath === '') {
         </div>
     </div>
 
-    <script src="asset/js/order.js"></script>
+    <script src="/WebTech_Project/OnlineCarRent/asset/js/order.js"></script>
 </body>
 </html>

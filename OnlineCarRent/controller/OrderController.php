@@ -49,6 +49,56 @@ class OrderController
         return $errors;
     }
 
+    /**
+     * Robust CSRF retrieval: supports getallheaders(), $_SERVER fallback,
+     * and also accepts csrf_token sent inside JSON body or form POST as a last resort.
+     */
+    private function getCsrfFromHeaders(string $rawBody = null)
+    {
+        $csrf = '';
+        if (function_exists('getallheaders')) {
+            $headers = getallheaders();
+            if (!empty($headers)) {
+                $csrf = $headers['X-CSRF-Token'] ?? $headers['x-csrf-token'] ?? '';
+            }
+        }
+        if (!$csrf) {
+            $csrf = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+        }
+
+        // If still empty, try to read JSON body passed by caller
+        if (!$csrf && $rawBody) {
+            $data = @json_decode($rawBody, true);
+            if (is_array($data) && !empty($data['csrf_token'])) {
+                $csrf = $data['csrf_token'];
+            }
+        }
+
+        // Also accept form POST fallback
+        if (!$csrf && isset($_POST['csrf_token'])) {
+            $csrf = $_POST['csrf_token'];
+        }
+
+        return $csrf;
+    }
+
+    private function logCsrfFailure(string $context, ?string $rawBody)
+    {
+        $info = [];
+        $info['context'] = $context;
+        $info['session_has_token'] = isset($_SESSION['csrf_token']);
+        // avoid logging actual token value
+        $info['server_csrf_header'] = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? null;
+        if (function_exists('getallheaders')) {
+            $info['headers'] = getallheaders();
+        }
+        // include a short excerpt of raw body for debugging
+        if ($rawBody) {
+            $info['raw_excerpt'] = substr($rawBody, 0, 400);
+        }
+        error_log('CSRF failure: ' . json_encode($info));
+    }
+
     public function calculateTotal()
     {
         $payload = json_decode(file_get_contents('php://input'), true);
@@ -86,16 +136,30 @@ class OrderController
     public function placeOrder()
     {
         // CSRF & auth checks
-        $headers = getallheaders();
-        $csrf = $headers['X-CSRF-Token'] ?? $headers['x-csrf-token'] ?? '';
+        $raw = @file_get_contents('php://input');
+        $payload = is_string($raw) ? @json_decode($raw, true) : [];
+        $csrf = $this->getCsrfFromHeaders($raw);
+
+        // Temporary debug: if client includes debug_csrf=true, return diagnostic info about what the server sees
+        if (!empty($payload['debug_csrf'])) {
+            $diag = [
+                'session_has_token' => isset($_SESSION['csrf_token']) ? true : false,
+                'server_csrf_header_present' => isset($_SERVER['HTTP_X_CSRF_TOKEN']) ? true : false,
+                'header_names' => function_exists('getallheaders') ? array_keys(getallheaders()) : [],
+                'raw_excerpt' => $raw ? substr($raw, 0, 800) : null,
+            ];
+            $this->jsonResponse(['success' => false, 'debug' => $diag]);
+        }
+
         if (empty($_SESSION['csrf_token']) || !$csrf || !hash_equals($_SESSION['csrf_token'], $csrf)) {
+            $this->logCsrfFailure('placeOrder', $raw);
             $this->jsonResponse(['success' => false, 'error' => 'Invalid request']);
         }
         if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || $_SESSION['role'] !== 'member') {
             $this->jsonResponse(['success' => false, 'error' => 'Unauthorized.']);
         }
 
-        $payload = json_decode(file_get_contents('php://input'), true);
+    $payload = is_string($raw) ? @json_decode($raw, true) : json_decode(file_get_contents('php://input'), true);
         $carId = isset($payload['car_id']) ? (int)$payload['car_id'] : 0;
         $startDate = $payload['start_date'] ?? '';
         $endDate = $payload['end_date'] ?? '';
@@ -178,16 +242,17 @@ class OrderController
     public function cancelOrder()
     {
         // CSRF & auth checks
-        $headers = getallheaders();
-        $csrf = $headers['X-CSRF-Token'] ?? $headers['x-csrf-token'] ?? '';
+        $raw = @file_get_contents('php://input');
+        $csrf = $this->getCsrfFromHeaders($raw);
         if (empty($_SESSION['csrf_token']) || !$csrf || !hash_equals($_SESSION['csrf_token'], $csrf)) {
+            $this->logCsrfFailure('cancelOrder', $raw);
             $this->jsonResponse(['success' => false, 'error' => 'Invalid request']);
         }
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'member') {
             $this->jsonResponse(['success' => false, 'error' => 'Unauthorized']);
         }
 
-        $payload = json_decode(file_get_contents('php://input'), true);
+    $payload = is_string($raw) ? @json_decode($raw, true) : json_decode(file_get_contents('php://input'), true);
         $orderId = isset($payload['order_id']) ? (int)$payload['order_id'] : 0;
         if ($orderId <= 0) {
             $this->jsonResponse(['success' => false, 'error' => 'Invalid order id']);
@@ -220,16 +285,17 @@ class OrderController
     public function finalizeOrder()
     {
         // CSRF & auth checks
-        $headers = getallheaders();
-        $csrf = $headers['X-CSRF-Token'] ?? $headers['x-csrf-token'] ?? '';
+        $raw = @file_get_contents('php://input');
+        $csrf = $this->getCsrfFromHeaders($raw);
         if (empty($_SESSION['csrf_token']) || !$csrf || !hash_equals($_SESSION['csrf_token'], $csrf)) {
+            $this->logCsrfFailure('finalizeOrder', $raw);
             $this->jsonResponse(['success' => false, 'error' => 'Invalid request']);
         }
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'member') {
             $this->jsonResponse(['success' => false, 'error' => 'Unauthorized']);
         }
 
-        $payload = json_decode(file_get_contents('php://input'), true);
+    $payload = is_string($raw) ? @json_decode($raw, true) : json_decode(file_get_contents('php://input'), true);
         $orderId = isset($payload['order_id']) ? (int)$payload['order_id'] : 0;
         $paymentMethod = $payload['payment_method'] ?? '';
 
