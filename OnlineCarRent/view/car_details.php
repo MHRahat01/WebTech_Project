@@ -40,7 +40,8 @@ if ($rawPath === '') {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title><?php echo e($car['name'] ?? 'Car Details'); ?></title>
-    <link rel="stylesheet" href="asset/css/style.css">
+    <meta name="csrf-token" content="<?php echo isset($_SESSION['csrf_token']) ? htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') : ''; ?>">
+    <link rel="stylesheet" href="/WebTech_Project/OnlineCarRent/asset/css/style.css">
     <style>
         /* small inline fallback */
         body { font-family: Arial, sans-serif; padding: 16px; }
@@ -50,7 +51,7 @@ if ($rawPath === '') {
     <a href="/">&larr; Back to listing</a>
     <div class="car-card">
         <div class="car-image">
-            <img src="<?php echo e($image); ?>" alt="<?php echo e($car['name']); ?>">
+            <img src="<?php echo htmlspecialchars($image, ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo e($car['name']); ?>">
         </div>
         <div class="car-info">
             <h2><?php echo e($car['name']); ?> (<?php echo e($car['model'] ?? 'N/A'); ?>)</h2>

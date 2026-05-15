@@ -13,7 +13,6 @@ class OrderController
     {
         $this->carModel = new CarModel();
         $this->orderModel = new OrderModel();
-        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
     }
 
     private function jsonResponse(array $data)
@@ -86,7 +85,12 @@ class OrderController
 
     public function placeOrder()
     {
-        // Must be logged-in member
+        // CSRF & auth checks
+        $headers = getallheaders();
+        $csrf = $headers['X-CSRF-Token'] ?? $headers['x-csrf-token'] ?? '';
+        if (empty($_SESSION['csrf_token']) || !$csrf || !hash_equals($_SESSION['csrf_token'], $csrf)) {
+            $this->jsonResponse(['success' => false, 'error' => 'Invalid request']);
+        }
         if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || $_SESSION['role'] !== 'member') {
             $this->jsonResponse(['success' => false, 'error' => 'Unauthorized.']);
         }
@@ -148,7 +152,6 @@ class OrderController
      */
     public function invoice(int $orderId)
     {
-        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'member') {
             header('Location: /');
             exit;
@@ -174,7 +177,12 @@ class OrderController
      */
     public function cancelOrder()
     {
-        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+        // CSRF & auth checks
+        $headers = getallheaders();
+        $csrf = $headers['X-CSRF-Token'] ?? $headers['x-csrf-token'] ?? '';
+        if (empty($_SESSION['csrf_token']) || !$csrf || !hash_equals($_SESSION['csrf_token'], $csrf)) {
+            $this->jsonResponse(['success' => false, 'error' => 'Invalid request']);
+        }
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'member') {
             $this->jsonResponse(['success' => false, 'error' => 'Unauthorized']);
         }
@@ -211,7 +219,12 @@ class OrderController
      */
     public function finalizeOrder()
     {
-        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+        // CSRF & auth checks
+        $headers = getallheaders();
+        $csrf = $headers['X-CSRF-Token'] ?? $headers['x-csrf-token'] ?? '';
+        if (empty($_SESSION['csrf_token']) || !$csrf || !hash_equals($_SESSION['csrf_token'], $csrf)) {
+            $this->jsonResponse(['success' => false, 'error' => 'Invalid request']);
+        }
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'member') {
             $this->jsonResponse(['success' => false, 'error' => 'Unauthorized']);
         }
@@ -269,7 +282,9 @@ class OrderController
             $this->jsonResponse(['success' => true]);
         } catch (Exception $ex) {
             if ($db->inTransaction()) $db->rollBack();
-            $this->jsonResponse(['success' => false, 'error' => 'Server error: '.$ex->getMessage()]);
+            // Log the exception message to server error log but return a generic message to client
+            error_log('FinalizeOrder error: ' . $ex->getMessage());
+            $this->jsonResponse(['success' => false, 'error' => 'Payment processing failed. Please try again later.']);
         }
     }
 
@@ -278,7 +293,7 @@ class OrderController
      */
     public function rentalHistory()
     {
-        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+        // session is started in index.php router
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'member') {
             header('Location: /');
             exit;

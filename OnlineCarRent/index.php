@@ -21,6 +21,16 @@ if (!isset($_SESSION['user_id'])) {
     $_SESSION['role'] = 'member';
 }
 
+// Ensure CSRF token exists for AJAX POST requests
+if (empty($_SESSION['csrf_token'])) {
+    try {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(16));
+    } catch (Exception $ex) {
+        // fallback
+        $_SESSION['csrf_token'] = bin2hex(openssl_random_pseudo_bytes(16));
+    }
+}
+
 spl_autoload_register(function ($class) {
     $paths = [__DIR__ . '/controller/' . $class . '.php', __DIR__ . '/model/' . $class . '.php'];
     foreach ($paths as $file) {

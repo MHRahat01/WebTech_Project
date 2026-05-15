@@ -15,7 +15,8 @@ function e($v) { return htmlspecialchars($v, ENT_QUOTES, 'UTF-8'); }
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Invoice - Order #<?php echo e($order['id']); ?></title>
-    <link rel="stylesheet" href="asset/css/style.css">
+    <meta name="csrf-token" content="<?php echo isset($_SESSION['csrf_token']) ? htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') : ''; ?>">
+    <link rel="stylesheet" href="/WebTech_Project/OnlineCarRent/asset/css/style.css">
     <style>.payment-placeholder{display:none;border:1px solid #ddd;padding:12px;margin-top:12px}</style>
 </head>
 <body>

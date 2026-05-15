@@ -44,9 +44,10 @@
         }
 
         try {
+            const csrf = document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').getAttribute('content') : '';
             const res = await fetch('?action=calculate_total', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
                 body: JSON.stringify({ car_id, start_date, end_date })
             });
             const data = await res.json();
@@ -80,9 +81,10 @@
         }
 
         try {
+            const csrf = document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').getAttribute('content') : '';
             const res = await fetch('?action=place_order', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
                 body: JSON.stringify({ car_id, start_date, end_date })
             });
             const data = await res.json();
@@ -117,9 +119,10 @@
 
             const orderId = window.__ORDER_ID || document.querySelector('[name="order_id"]')?.value;
             try {
+                const csrf = document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').getAttribute('content') : '';
                 const res = await fetch('?action=cancel_order', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
                     body: JSON.stringify({ order_id: orderId })
                 });
                 const data = await res.json();
@@ -158,9 +161,10 @@
 
             const orderId = window.__ORDER_ID || document.querySelector('[name="order_id"]')?.value;
             try {
+                const csrf = document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').getAttribute('content') : '';
                 const res = await fetch('?action=finalize_order', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
                     body: JSON.stringify({ order_id: orderId, payment_method: method })
                 });
                 const data = await res.json();
